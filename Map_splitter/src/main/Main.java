@@ -8,7 +8,7 @@ public class Main {
 	
     public static void main(String[] args) {
  
-    	Map_input mi = new Map_input(window);
+    	Map_input mi = new Map_input();
     
     }
 }

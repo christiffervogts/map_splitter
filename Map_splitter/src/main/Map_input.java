@@ -11,26 +11,27 @@ import javax.swing.JPanel;
 
 public class Map_input extends JPanel {
 
-	JFrame window;
 	Rectangle import_button;
-	public Map_input(JFrame window){
-		this.window = window;
+	public Map_input(){
+
 		
-		window.setSize(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
-		window.setLocationRelativeTo(null);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setVisible(true);
+		Main.window.setSize(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+		Main.window.setLocationRelativeTo(null);
+		Main.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Main.window.setVisible(true);
+		setup();
+		Main.window.add(this);
+		this.setBackground(Color.cyan);
 	}
 	public void setup() {
-		import_button = new Rectangle();
+		import_button = new Rectangle(Main.window.getWidth()/2 - 350/2, Main.window.getHeight()/2 - 200/2, 350, 200);
 	}
 	public void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		g2.setBackground(Color.cyan);
-		
+		g2.draw(import_button);
 		
 	}
 
