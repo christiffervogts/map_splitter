@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -16,11 +18,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Map_input extends JPanel implements MouseListener {
+public class Map_input extends JPanel implements MouseListener, KeyListener {
 
 	Rectangle import_button;
 	BufferedImage map;
-	
+	String fileName;
 	Grid_maker gm = new Grid_maker();
 	
 	boolean step_1, step_2, step_3 = false;
@@ -34,6 +36,7 @@ public class Map_input extends JPanel implements MouseListener {
 		Main.window.setVisible(true);
 		setup();
 		this.addMouseListener(this);
+		Main.window.addKeyListener(this);
 		this.setBackground( new Color(10, 50, 100));
 		step_1 = true;
 	}
@@ -82,7 +85,7 @@ public class Map_input extends JPanel implements MouseListener {
             dialog.setVisible(true);
 
             String directory = dialog.getDirectory();
-            String fileName  = dialog.getFile();
+            fileName  = dialog.getFile();
 
             if (fileName != null) {
                 File file = new File(directory, fileName);
@@ -125,6 +128,32 @@ public class Map_input extends JPanel implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+
+		if(key == KeyEvent.VK_ENTER) {
+            FileDialog dialog = new FileDialog(Main.window, "Save a folder", FileDialog.SAVE);
+
+            dialog.setVisible(true);
+            String Folder = dialog.getFile();
+            String path = dialog.getDirectory();
+
+            File newFolder = new File(path + "Maps_split_"+ fileName);
+            boolean created = newFolder.mkdir();
+            
+            if(created) {
+            	gm.split(map, newFolder);
+            }
+
+		}
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 	
 
