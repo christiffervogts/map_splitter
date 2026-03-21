@@ -56,39 +56,53 @@ public class Grid_maker {
 		}	
 	public File[] split(BufferedImage map, File outputFolder) {
 	    if (map == null) return null;
-
-	    int rows = (int)Math.sqrt(number_of_maps);
-	    int cols = rows;
-
-	    int cellW = image_width / cols;
-	    int cellH = image_height / rows;
-
+ 
+	    double scale = Math.sqrt(1.0 / number_of_maps);
+ 
+	    int gridW = (int)(image_width * scale);
+	    int gridH = (int)(image_height * scale);
+ 
+	    int imgW = map.getWidth();
+	    int imgH = map.getHeight();
+ 
+	    // Compute the same offsets as fix_lines, but relative to the image origin.
+	    // fix_lines uses screen coords; here we map starting_x/y into image space
+	    // by treating the image as if it starts at (0,0) in screen space.
+	    int offset_x = (int)((starting_x - gridW / 2.0) % gridW);
+	    if (offset_x > 0) offset_x -= gridW;
+ 
+	    int offset_y = (int)((starting_y - gridH / 2.0) % gridH);
+	    if (offset_y > 0) offset_y -= gridH;
+ 
 	    File[] outputs = new File[number_of_maps];
 	    int index = 0;
-
-	    try {
-	        for (int row = 0; row < rows; row++) {
-	            for (int col = 0; col < cols; col++) {
-
-	                int x = col * cellW;
-	                int y = row * cellH;
-
-	                // Crop the mini‑map
-	                BufferedImage sub = map.getSubimage(x, y, cellW, cellH);
-
-	                // Output file
-	                File out = new File(outputFolder, "mini_map_" + index + ".png");
+ 
+	    for (int y = offset_y; y < imgH && index < number_of_maps; y += gridH) {
+	        for (int x = offset_x; x < imgW && index < number_of_maps; x += gridW) {
+ 
+	            int clipX = Math.max(x, 0);
+	            int clipY = Math.max(y, 0);
+	            int clipW = Math.min(x + gridW, imgW) - clipX;
+	            int clipH = Math.min(y + gridH, imgH) - clipY;
+ 
+	            if (clipW <= 0 || clipH <= 0) continue;
+ 
+	            BufferedImage sub = map.getSubimage(clipX, clipY, clipW, clipH);
+ 
+	            File out = new File(outputFolder,
+	                    "mini_map_" + String.format("%02d", index) + ".png");
+ 
+	            try {
 	                ImageIO.write(sub, "png", out);
-
 	                outputs[index] = out;
-	                index++;
+	            } catch (Exception e) {
+	                e.printStackTrace();
 	            }
+ 
+	            index++;
 	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
 	    }
-
+ 
 	    return outputs;
 	}
-	
 }

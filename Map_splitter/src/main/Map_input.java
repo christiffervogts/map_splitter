@@ -57,7 +57,8 @@ public class Map_input extends JPanel implements MouseListener, KeyListener {
 				gm.fix_lines(g2);
 			}
 		}
-		else {			
+		else {		
+			g2.setColor(Color.white);
 			g2.drawString("IMPORT MAP", import_button.x+import_button.width/2, import_button.y+import_button.height/2);
 			g2.draw(import_button);
 		}
